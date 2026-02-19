@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    image: postgres:15 #postgres version 15 image wi;; be pulled of from docker hub
+    container_name: shopping-postgres #container gets a readable name
+    environment: #setting DB credentials
+      POSTGRES_DB: shopping
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: Asia/Kolkata #the docker timezone defaults to Asia/Calcutta which causes DB connection issue
+    ports: #Maps container port to laptop port->HOST_PORT:CONTAINER_PORT
+      - "5432:5432" #localhost:5432 → postgres container -
+                    #it means we can connect DB using this jdbc:postgresql://localhost:5432/shopping
+    volumes:
+      - pgdata:/var/lib/postgresql/data #this helps data to save in db permanently,
+                                        #if not there data will be lost once container is deleted
+
+  redis: #for caching
+    image: redis:7 #redis v7
+    container_name: shopping-redis
+    ports:
+      - "6379:6379" #similar to localhost:6379 ->spring.redis.host=localhost and spring.redis.port=6379
+
+  keycloak: #for logging auth
+    image: quay.io/keycloak/keycloak:24.0 #keyclock version 24
+    container_name: shopping-keycloak
+    command: start-dev #rund keyclock in dev mode
+    environment: #admin login credentials
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8081:8080" #http://localhost:8081
+
+volumes:
+  pgdata:
