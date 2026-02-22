@@ -1,8 +1,5 @@
 package com.chirag.shopping_service.category;
 
-import com.chirag.shopping_service.product.Product;
-import com.chirag.shopping_service.product.ProductDTO;
-import com.chirag.shopping_service.product.ProductRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -28,7 +25,7 @@ public class CategoryService {
                 .map(c -> new CategoryDTO(
                         c.getId(),
                         c.getName(),
-                        c.getName()
+                        c.getDescription()
                 ))
                 .toList();
     }
