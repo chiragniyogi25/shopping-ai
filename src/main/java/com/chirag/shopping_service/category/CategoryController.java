@@ -10,20 +10,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
-    private final CategoryRepository repo;
+    private final CategoryService service;
 
-    public CategoryController(CategoryRepository repo) {
-        this.repo = repo;
+    public CategoryController(CategoryService service) {
+        this.service = service;
     }
     @PostMapping()
     @CacheEvict(value = "category", allEntries = true)//DB amd cache both will get updated
     public Category add(@RequestBody Category c) {
-        return repo.save(c);
+        return service.save(c);
     }
 
     @GetMapping
     @Cacheable("category")
-    public List<Category> all() {
-        return repo.findAll();
+    public List<CategoryDTO> all() {
+        return service.getAllCategories();
     }
 }
