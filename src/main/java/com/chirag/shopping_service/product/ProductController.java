@@ -1,6 +1,5 @@
 package com.chirag.shopping_service.product;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -8,19 +7,19 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
 
-    private final ProductRepository repo;
+    private final ProductService service;
 
-    public ProductController(ProductRepository repo) {
-        this.repo = repo;
+    public ProductController(ProductService service) {
+        this.service = service;
     }
 
     @PostMapping()
     public Product add(@RequestBody Product p) {
-        return repo.save(p);
+        return service.save(p);
     }
 
     @GetMapping
-    public List<Product> all() {
-        return repo.findAll();
+    public List<ProductDTO> all() {
+        return service.getAllProducts();
     }
 }

@@ -1,0 +1,40 @@
+package com.chirag.shopping_service.product;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+@Service
+public class ProductService {
+
+    private final ProductRepository repo;
+
+    public ProductService(ProductRepository repo) {
+        this.repo = repo;
+    }
+
+    @Transactional(readOnly = true)//adding this hibernate session will be active since lazy fileds are also fetched
+    @Cacheable("products") //it will not hit DB if cache data is found
+    public List<ProductDTO> getAllProducts() {
+        //using DTO to fetch it to avoid redis serialization
+        return repo.findAllWithCategory()
+                .stream()
+                .map(p -> new ProductDTO(
+                        p.getId(),
+                        p.getName(),
+                        p.getPrice(),
+                        p.getRegionTag(),
+                        p.getStock(),
+                        p.getCategory().getName()
+                ))
+                .toList();
+    }
+
+    @CacheEvict(value = "products", allEntries = true)//DB amd cache both will get updated
+    @Transactional
+    public Product save(Product p){
+        return repo.save(p);
+    }
+}
