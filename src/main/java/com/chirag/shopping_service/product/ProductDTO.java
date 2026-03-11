@@ -7,10 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDTO {
-    private Long id;
-    private String name;
-    private double price;
-    private String regionTag;
-    private Integer stock;
-    private String categoryName;
+    private Long productId;
+    private String productName;
+    private double productPrice;
+    private String productRegionTag;
+    private Integer productAvailability;
+    private String productCategoryName;
 }
