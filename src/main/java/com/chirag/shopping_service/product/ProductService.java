@@ -29,18 +29,6 @@ public class ProductService {
             productDTOList.add(mapper.mapProductToProductDTO(p));
         }
         return productDTOList;
-
-//        return repo.findAllWithCategory()
-//                .stream()
-//                .map(p -> new ProductDTO(
-//                        p.getId(),
-//                        p.getName(),
-//                        p.getPrice(),
-//                        p.getRegionTag(),
-//                        p.getStock(),
-//                        p.getCategory().getName()
-//                ))
-//                .toList();
     }
 
     @CacheEvict(value = "products", allEntries = true)//DB amd cache both will get updated
