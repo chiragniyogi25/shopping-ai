@@ -24,12 +24,10 @@ public class CategoryService {
     @Cacheable("category") //it will not hit DB if cache data is found
     public List<CategoryDTO> getAllCategories() {
         //using DTO to fetch it to avoid redis serialization
-        List<Category> categoryList= repo.findAll();
-        List<CategoryDTO> categoryDTOList = new ArrayList<>();
-        for(Category c:categoryList){
-            categoryDTOList.add(mapper.mapCategoryToCategoryDTO(c));
-        }
-        return categoryDTOList;
+        return repo.findAll()
+                .stream()
+                .map(mapper::mapCategoryToCategoryDTO)//changed to method reference from lambda function-(c->mapper.mapCategoryToCategoryDTO(c))
+                .toList();
     }
 
     @CacheEvict(value = "category", allEntries = true)//DB amd cache both will get updated

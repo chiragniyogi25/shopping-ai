@@ -23,12 +23,10 @@ public class ProductService {
     @Cacheable("products") //it will not hit DB if cache data is found
     public List<ProductDTO> getAllProducts() {
         //using DTO to fetch it to avoid redis serialization
-        List<Product> productList = repo.findAllWithCategory();
-        List<ProductDTO> productDTOList=new ArrayList<>();
-        for(Product p:productList){
-            productDTOList.add(mapper.mapProductToProductDTO(p));
-        }
-        return productDTOList;
+        return repo.findAllWithCategory()
+                .stream()
+                .map(mapper::mapProductToProductDTO) //changed to method reference from lambda function-(p->mapper.mapProductToProductDTO(p))
+                .toList();
     }
 
     @CacheEvict(value = "products", allEntries = true)//DB amd cache both will get updated
